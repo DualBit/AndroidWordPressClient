@@ -227,21 +227,25 @@ public class Query {
 
         for (Field field: this.getClass().getDeclaredFields()) {
             try {
-                Field thisField = this.getClass().getField(field.getName());
                 if (!field.isSynthetic()) {
-                    SerializedName a = field.getAnnotation(SerializedName.class);
-                    String jsonName = a != null ? a.value() : null;
+                    SerializedName serializedName = field.getAnnotation(SerializedName.class);
+                    String jsonName = serializedName != null ? serializedName.value() : null;
 
                     String key = jsonName != null ? jsonName : field.getName();
                     if (field.getType() == List.class) {
                         key = key + "[]";
                         String value = generateQueryStringArray(field, key);
-                        retMap.put(key, value);
+                        if (!value.isEmpty()) {
+                            retMap.put(key, value);
+                        }
                     } else {
-                        retMap.put(key, field.get(thisField));
+                        Object value = field.get(this);
+                        if (value != null) {
+                            retMap.put(key, value);
+                        }
                     }
                 }
-            } catch (NoSuchFieldException | IllegalAccessException ignore) {
+            } catch (IllegalAccessException ignore) {
             }
         }
 
@@ -261,7 +265,7 @@ public class Query {
                     Object entry = list.get(i);
                     string.append(entry);
                     if ((i + 1) != list.size()) {
-                        string.append("&$key=");
+                        string.append("&").append(key).append("=");
                     }
                 }
             }
@@ -270,30 +274,4 @@ public class Query {
 
         return string.toString();
     }
-
-//    @Deprecated
-//    static List<Integer> getExcludeNegativeList(List<Integer> exclude) {
-//        def excludeNegativeList = [];
-//        if (!exclude?.isEmpty()) {
-//            exclude.each { number ->
-//                    number > 0 ?: number * -1
-//                excludeNegativeList.add(number);
-//            }
-//        }
-//        return excludeNegativeList;
-//    }
-
-//    @Deprecated
-//    static String getExcludeString(List<Integer> exclude) {
-//        String excluded = "";
-//        if (!exclude?.isEmpty()) {
-//            exclude.each { excludeId ->
-//                if (excluded == null)
-//                    excluded = "-" + excludeId;
-//                else
-//                    excluded = excluded.concat(", -" + excludeId);
-//            }
-//        }
-//        return excluded;
-//    }
 }
