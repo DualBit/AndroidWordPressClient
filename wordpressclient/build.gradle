@@ -7,14 +7,12 @@ android {
     defaultConfig {
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 1
-        versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
@@ -47,8 +45,8 @@ publishing {
             name = "WordPressClient"
             url = uri("https://maven.pkg.github.com/DualBit/AndroidWordPressClient")
             credentials {
-                username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+                username = System.getenv("USERNAME")
+                password = System.getenv("TOKEN")
             }
         }
     }
@@ -57,12 +55,15 @@ publishing {
             artifact("$buildDir/outputs/aar/wordpressclient-release.aar")  {
                 builtBy tasks.getByName("assemble")
             }
-            groupId 'io.dualbit'
+            groupId 'io.dualbit.wordpressclient'
             artifactId 'wordpressclient'
-            version this.version
+            version '1.0.1'
             pom.withXml {
-                url.set("https://github.com/DualBit/AndroidWordPressClient.git")
-                def dependenciesNode = asNode().appendNode('dependencies')
+                def root = asNode()
+                root.appendNode('name', 'Android WordPress Client')
+                root.appendNode('description', 'Android WordPress JSON API Client')
+                root.appendNode('url', 'https://github.com/DualBit/AndroidWordPressClient')
+                def dependenciesNode = root.appendNode('dependencies')
                 // Iterate over the implementation dependencies (we don't want the test ones), adding a <dependency> node for each
                 configurations.implementation.allDependencies.each {
                     // Ensure dependencies such as fileTree are not included in the pom.
