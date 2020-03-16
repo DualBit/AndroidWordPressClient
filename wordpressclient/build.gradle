@@ -52,4 +52,11 @@ publishing {
             }
         }
     }
+    publications {
+        register("jar", MavenPublication) {
+            pom {
+                url.set("https://github.com/DualBit/AndroidWordPressClient.git")
+            }
+        }
+    }
 }
