@@ -2,8 +2,6 @@ package io.dualbit.wordpressclient.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
-
 import lombok.Getter;
 
 
@@ -29,8 +27,8 @@ abstract class BaseObject {
      * Meta fields.
      * <p>Context: view, edit</p>
      */
-    @Getter
-    List<Rendered> meta; // todo test if it is indeed list of meta objects
+    //@Getter
+    //Meta meta; // FIXME: create meta object
 
     @Getter
     @SerializedName("_links")

@@ -9,7 +9,7 @@ import java.util.List;
 
 import io.dualbit.wordpressclient.model.Post;
 import io.dualbit.wordpressclient.query.Query;
-import io.dualbit.wordpressclient.rest.WordPressRestClient;
+import io.dualbit.wordpressclient.rest.WordPressClient;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                WordPressRestClient client = new WordPressRestClient(null, BASE_URL);
+                WordPressClient client = new WordPressClient(null, BASE_URL, true);
 
                 Query query = Query.builder()
                         .context("view")
@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.d(TAG, "list of posts is: " + posts);
                 for (Post post : posts) {
-                    Log.d(TAG, "post: " + post.getId());
+                    Log.d(TAG, "post: " + post.getId() + " - " + post.getTitle().getRendered());
                 }
             }
         }).start();

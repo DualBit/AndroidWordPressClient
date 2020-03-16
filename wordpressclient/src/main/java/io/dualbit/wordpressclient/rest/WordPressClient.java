@@ -9,29 +9,40 @@ import java.util.Map;
 import io.dualbit.wordpressclient.model.*;
 import io.dualbit.wordpressclient.query.Query;
 import okhttp3.OkHttpClient;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 
-public class WordPressRestClient {
+public class WordPressClient {
 
     private WordPressService apiService;
 
-    public WordPressRestClient(@Nullable OkHttpClient httpClient, String baseUrl) {
+    public WordPressClient(@Nullable OkHttpClient httpClient, String baseUrl) {
+        this(httpClient, baseUrl, false);
+    }
+
+    public WordPressClient(@Nullable OkHttpClient httpClient, String baseUrl, boolean httpClientLogging) {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
-                .client(httpClient != null ? httpClient : getDefaultOkHttpClient())
+                .client(httpClient != null ? httpClient : getDefaultOkHttpClient(httpClientLogging))
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
 
         apiService = retrofit.create(WordPressService.class);
     }
 
-    private OkHttpClient getDefaultOkHttpClient() {
-        return new OkHttpClient.Builder()
-                .addNetworkInterceptor(new WordPressNetworkInterceptor())
-                .build();
+    private OkHttpClient getDefaultOkHttpClient(boolean httpClientLogging) {
+
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
+                .addNetworkInterceptor(new WordPressNetworkInterceptor());
+        if (httpClientLogging) {
+            okHttpClientBuilder.addInterceptor(
+                    new HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY));
+        }
+
+        return okHttpClientBuilder.build();
     }
 
     public List<Post> getPosts(Query query) {
