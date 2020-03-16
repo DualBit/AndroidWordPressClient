@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
-        versionName "1.0"
+        versionName "1.0.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles 'consumer-rules.pro'
     }
@@ -45,7 +45,7 @@ publishing {
     repositories {
         maven {
             name = "WordPressClient"
-            url = uri("https://github.com/DualBit/AndroidWordPressClient")
+            url = uri("https://maven.pkg.github.com/DualBit/AndroidWordPressClient")
             credentials {
                 username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
                 password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
