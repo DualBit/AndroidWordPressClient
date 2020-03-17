@@ -8,7 +8,7 @@ android {
         minSdkVersion 19
         targetSdkVersion 29
         versionCode 1
-        versionName "0.1"
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -81,7 +81,7 @@ publishing {
             }
             groupId 'io.dualbit.wordpressclient'
             artifactId 'wordpressclient'
-            version '1.0.1'
+            version '1.0.2'
             pom.withXml {
                 def root = asNode()
                 root.appendNode('name', 'Android WordPress Client')
